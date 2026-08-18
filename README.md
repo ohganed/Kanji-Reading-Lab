@@ -34,8 +34,10 @@
 - React
 - TypeScript
 - CSS
-- `kanji.js`（KANJIDIC由来の漢字データ）
+- KANJIDIC2から生成した2,136字の小型ローカル辞書
 - 外部の形態素解析APIは不使用
+
+辞書は実行時に外部へ接続せず、`app/data/school-kanji.json` を読み込みます。GitHub Actionsが毎月1回、EDRDGの公式データに更新がないか確認し、変更があればレビュー用のPull Requestを作成します。手動更新は `npm run dictionary:update` で実行できます。
 
 辞書データの出典とライセンスは、アプリ内の「設定 → 辞書の出典とライセンス」および [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) に記載しています。
 

@@ -1,0 +1,41 @@
+name: Update KANJIDIC2 data
+
+on:
+  schedule:
+    - cron: "17 3 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run dictionary:update
+      - run: node --test tests/kanji-data.test.mjs
+      - name: Open an update pull request when data changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- app/data/school-kanji.json; then
+            echo "KANJIDIC2 data is already current."
+            exit 0
+          fi
+          branch="automation/update-kanjidic-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add app/data/school-kanji.json
+          git commit -m "Update bundled KANJIDIC2 data"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "Update bundled KANJIDIC2 data" \
+            --body "Monthly refresh from the official EDRDG KANJIDIC2 source. Review and merge to publish the updated local dictionary."

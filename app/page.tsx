@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Kanji from "kanji.js";
+import schoolKanjiData from "./data/school-kanji.json";
 import SourceNotice from "./source-notice";
 
 type Status = "learning" | "known" | "review" | "stable";
@@ -15,9 +15,8 @@ type ParsedUnit = { text:string; reading?:string; meaning?:string; source?:Readi
 
 // KANJIDIC由来の常用漢字データから、小学校6学年と中学校相当（grade 8）を採用。
 // 文脈を確定できない単漢字には候補だけを出し、AI注釈・熟語辞書・手動修正を優先する。
-const SCHOOL_GRADES = new Set([1,2,3,4,5,6,8]);
 const SCHOOL_KANJI:Record<string,KanjiInfo> = Object.fromEntries(
-  (Kanji.dump() as KanjiInfo[]).filter(k=>SCHOOL_GRADES.has(k.grade)).map(k=>[k.literal,k])
+  (schoolKanjiData.characters as KanjiInfo[]).map(k=>[k.literal,k])
 );
 const kataToHira=(s:string)=>s.replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));
 const cleanReading=(s:string)=>kataToHira(s.replace(/[.\-]/g,""));
