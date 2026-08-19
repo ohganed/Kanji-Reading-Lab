@@ -42,6 +42,9 @@ export function inferKanjiRun(
   dictionary: Record<string, FuriganaKanjiInfo>,
   followingHiragana = "",
 ) {
+  const followsWithOkurigana =
+    !!followingHiragana &&
+    !/^(?:は|が|を|に|へ|と|で|の|も|や|か|ね|よ|から|まで)/.test(followingHiragana);
   let previous = "";
   return [...word]
     .map((character) => {
@@ -49,7 +52,7 @@ export function inferKanjiRun(
       previous = inferKanjiReading(
         dictionary[character],
         word.length === 1 ? followingHiragana : "",
-        word.length === 1 && !!followingHiragana,
+        word.length === 1 && followsWithOkurigana,
       );
       return previous;
     })

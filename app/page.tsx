@@ -24,7 +24,7 @@ const cleanReading=(s:string)=>kataToHira(s.replace(/[.\-]/g,""));
 const readingCandidates=(k?:KanjiInfo)=>k?[...new Set([...k.onyomi,...k.kunyomi].map(cleanReading).filter(Boolean))]:[];
 
 const SAMPLE = "[今日|きょう|today]は[学校|がっこう|school]の[図書館|としょかん|library]で[日本|にほん|Japan]の[歴史|れきし|history]について[勉強|べんきょう|studied]しました。[最初|さいしょ|at first]は[難しい|むずかしい|difficult][漢字|かんじ|kanji]が[多い|おおい|many]と[思いました|おもいました|thought]が、[少し|すこし|little by little]ずつ[読める|よめる|became able to read]ようになりました。";
-const DICT:Record<string,string> = {"図書館":"としょかん","勉強":"べんきょう","難しい":"むずかしい","読める":"よめる","学校":"がっこう","日本":"にほん","歴史":"れきし","最初":"さいしょ","漢字":"かんじ","今日":"きょう","多い":"おおい","少し":"すこし","文章":"ぶんしょう","読む":"よむ","覚える":"おぼえる","毎日":"まいにち","言葉":"ことば","学習":"がくしゅう"};
+const DICT:Record<string,string> = {"図書館":"としょかん","勉強":"べんきょう","難しい":"むずかしい","読める":"よめる","学校":"がっこう","日本語":"にほんご","日本":"にほん","大学":"だいがく","学生":"がくせい","先生":"せんせい","私":"わたし","人":"ひと","仕事":"しごと","会社":"かいしゃ","電車":"でんしゃ","駅":"えき","東京":"とうきょう","大阪":"おおさか","友達":"ともだち","名前":"なまえ","時間":"じかん","歴史":"れきし","最初":"さいしょ","漢字":"かんじ","今日":"きょう","多い":"おおい","少し":"すこし","文章":"ぶんしょう","読む":"よむ","覚える":"おぼえる","毎日":"まいにち","言葉":"ことば","学習":"がくしゅう","行く":"いく","来る":"くる","見る":"みる","食べる":"たべる","話す":"はなす","聞く":"きく","書く":"かく","買う":"かう","帰る":"かえる"};
 const BUILTIN_WORDS = Object.keys(DICT).sort((a,b)=>b.length-a.length);
 const NAV:{id:Tab;label:string;icon:string}[] = [
   {id:"home",label:"ホーム",icon:"⌂"},{id:"input",label:"文章入力",icon:"＋"},{id:"reading",label:"リーディング",icon:"▤"},{id:"notebook",label:"漢字帳",icon:"字"},{id:"review",label:"復習",icon:"↻"},{id:"library",label:"ライブラリ",icon:"▣"},{id:"history",label:"学習履歴",icon:"⌁"},{id:"settings",label:"設定",icon:"⚙"}
