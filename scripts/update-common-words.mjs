@@ -45,6 +45,7 @@ if (!response.ok) throw new Error(`JMdict download failed: ${response.status}`);
 
 const xml = gunzipSync(Buffer.from(await response.arrayBuffer())).toString("utf8");
 const selected = new Map();
+const alternatives = new Map();
 
 for (const match of xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)) {
   const entry = match[1];
@@ -69,6 +70,9 @@ for (const match of xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)) {
       if (reading.restrictedTo.size && !reading.restrictedTo.has(spelling.text)) continue;
       const score = spelling.score + reading.score;
       if (!score) continue;
+      const candidates = alternatives.get(spelling.text) || new Map();
+      candidates.set(reading.text, Math.max(candidates.get(reading.text) || 0, score));
+      alternatives.set(spelling.text, candidates);
       const current = selected.get(spelling.text);
       if (!current || score > current.score) selected.set(spelling.text, { reading: reading.text, score });
     }
@@ -79,6 +83,15 @@ const words = Object.fromEntries(
   [...selected.entries()]
     .sort(([left], [right]) => left.localeCompare(right, "ja"))
     .map(([word, { reading }]) => [word, reading]),
+);
+const readingCandidates = Object.fromEntries(
+  [...alternatives.entries()]
+    .map(([word, candidates]) => [word, [...candidates.entries()]
+      .sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0], "ja"))
+      .map(([reading]) => reading)
+      .slice(0, 6)])
+    .filter(([, candidates]) => candidates.length > 1)
+    .sort(([left], [right]) => left.localeCompare(right, "ja")),
 );
 
 if (Object.keys(words).length < 15_000) {
@@ -97,7 +110,9 @@ const data = {
     : null,
   selection: "JMdict entries with common-word priority tags; highest-priority compatible reading per spelling",
   wordCount: Object.keys(words).length,
+  ambiguousWordCount: Object.keys(readingCandidates).length,
   words,
+  readingCandidates,
 };
 
 await mkdir(dirname(outputPath), { recursive: true });

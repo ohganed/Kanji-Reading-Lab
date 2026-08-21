@@ -39,3 +39,10 @@ test("keeps lexical readings and compound sound changes", () => {
   assert.equal(commonWords.words["大人"], "おとな");
   assert.notEqual(commonWords.words["貴重"], "きじゅう");
 });
+
+test("keeps alternative readings for context-sensitive words", () => {
+  assert.ok(commonWords.ambiguousWordCount >= 2_000);
+  assert.deepEqual(commonWords.readingCandidates["生物"].slice(0, 2), ["せいぶつ", "なまもの"]);
+  assert.ok(commonWords.readingCandidates["一日"].includes("ついたち"));
+  assert.ok(commonWords.readingCandidates["明日"].includes("あす"));
+});
