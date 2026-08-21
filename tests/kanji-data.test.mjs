@@ -5,6 +5,9 @@ import test from "node:test";
 const data = JSON.parse(
   await readFile(new URL("../app/data/school-kanji.json", import.meta.url), "utf8"),
 );
+const commonWords = JSON.parse(
+  await readFile(new URL("../app/data/common-words.json", import.meta.url), "utf8"),
+);
 
 test("bundles the complete school and joyo kanji subset", () => {
   assert.equal(data.source, "KANJIDIC2");
@@ -22,11 +25,17 @@ test("includes readings for representative characters", () => {
   assert.ok(byLiteral["読"].kunyomi.some((reading) => reading.startsWith("よ")));
 });
 
-test("keeps common compound sound changes in the built-in word dictionary", async () => {
-  const pageSource = await readFile(
-    new URL("../app/page.tsx", import.meta.url),
-    "utf8",
-  );
-  assert.match(pageSource, /"散歩":"さんぽ"/);
-  assert.doesNotMatch(pageSource, /"散歩":"さんほ"/);
+test("bundles a substantial common-word dictionary", () => {
+  assert.equal(commonWords.source, "JMdict_e");
+  assert.ok(commonWords.wordCount >= 15_000);
+  assert.equal(Object.keys(commonWords.words).length, commonWords.wordCount);
+});
+
+test("keeps lexical readings and compound sound changes", () => {
+  assert.equal(commonWords.words["散歩"], "さんぽ");
+  assert.equal(commonWords.words["貴重"], "きちょう");
+  assert.equal(commonWords.words["慎重"], "しんちょう");
+  assert.equal(commonWords.words["重要"], "じゅうよう");
+  assert.equal(commonWords.words["大人"], "おとな");
+  assert.notEqual(commonWords.words["貴重"], "きじゅう");
 });
