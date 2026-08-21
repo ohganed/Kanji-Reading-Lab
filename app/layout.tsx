@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./kanji-structure.css";
 
 const basePath = process.env.GITHUB_ACTIONS === "true" ? "/Kanji-Reading-Lab" : "";
 

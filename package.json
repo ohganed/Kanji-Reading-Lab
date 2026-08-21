@@ -13,6 +13,7 @@
     "test": "npm run build && node --test tests/*.test.mjs",
     "dictionary:update": "node scripts/update-kanji-data.mjs",
     "dictionary:update-words": "node scripts/update-common-words.mjs",
+    "dictionary:update-components": "node scripts/update-kanji-components.mjs",
     "validate:artifact": "bash scripts/validate-artifact.sh",
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate"

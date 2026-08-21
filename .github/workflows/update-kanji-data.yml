@@ -21,12 +21,13 @@ jobs:
       - run: npm ci
       - run: npm run dictionary:update
       - run: npm run dictionary:update-words
-      - run: node --test tests/kanji-data.test.mjs
+      - run: npm run dictionary:update-components
+      - run: node --test tests/kanji-data.test.mjs tests/kanji-components.test.mjs
       - name: Open an update pull request when data changed
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if git diff --quiet -- app/data/school-kanji.json app/data/common-words.json; then
+          if git diff --quiet -- app/data/school-kanji.json app/data/common-words.json app/data/kanji-components.json; then
             echo "Japanese dictionary data is already current."
             exit 0
           fi
@@ -34,9 +35,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$branch"
-          git add app/data/school-kanji.json app/data/common-words.json
+          git add app/data/school-kanji.json app/data/common-words.json app/data/kanji-components.json
           git commit -m "Update bundled Japanese dictionary data"
           git push origin "$branch"
           gh pr create --base main --head "$branch" \
             --title "Update bundled Japanese dictionary data" \
-            --body "Monthly refresh from the official EDRDG KANJIDIC2 and JMdict_e sources. Review and merge to publish the updated local dictionaries."
+            --body "Monthly refresh from the official EDRDG KANJIDIC2 and JMdict_e sources and the official KanjiVG release. Review and merge to publish the updated local dictionaries."
