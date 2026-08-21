@@ -21,3 +21,12 @@ The bundled file `app/data/common-words.json` is a filtered and reformatted subs
 - [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 
 The generated subset preserves attribution and source metadata in the JSON file. Run `npm run dictionary:update-words` to regenerate it from the current JMdict_e distribution.
+
+## KanjiVG component data
+
+The bundled file `app/data/kanji-components.json` is a filtered and reformatted subset of KanjiVG. It contains radical and graphic-component metadata for the 2,136 jōyō kanji used by this app. Copyright © 2009–2013 Ulrich Apel and the KanjiVG contributors.
+
+- [KanjiVG project](https://github.com/KanjiVG/kanjivg)
+- [Creative Commons Attribution-ShareAlike 3.0](https://creativecommons.org/licenses/by-sa/3.0/)
+
+This derived component-data file is distributed under CC BY-SA 3.0. The short multilingual learning cues in `app/component-meanings.ts` were written for this app and are not intended as complete historical etymologies. Run `npm run dictionary:update-components` to regenerate the component data from the latest official KanjiVG XML release.
