@@ -21,3 +21,12 @@ test("includes readings for representative characters", () => {
   assert.ok(byLiteral["校"].onyomi.includes("コウ"));
   assert.ok(byLiteral["読"].kunyomi.some((reading) => reading.startsWith("よ")));
 });
+
+test("keeps common compound sound changes in the built-in word dictionary", async () => {
+  const pageSource = await readFile(
+    new URL("../app/page.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.match(pageSource, /"散歩":"さんぽ"/);
+  assert.doesNotMatch(pageSource, /"散歩":"さんほ"/);
+});
